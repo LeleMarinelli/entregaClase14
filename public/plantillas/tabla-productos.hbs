@@ -6,19 +6,19 @@
 </style>
 
 {{#if productos.length}}
-<h2>Lista de Productos agregados</h2>
+<h2>Lista de Productos agregados 🛰</h2>
 <div class="table-responsive">
-    <table class="table table-dark">
+    <table class="table">
         <tr>
+            <th>Foto</th>
             <th>Nombre</th>
             <th>Precio</th>
-            <th>Foto</th>
         </tr>
         {{#each productos}}
         <tr>
+            <td><img width="75" src={{this.thumbnail}} alt="not found"></td>
             <td>{{this.title}}</td>
             <td>${{this.price}}</td>
-            <td><img width="50" src={{this.thumbnail}} alt="not found"></td>
         </tr>
         {{/each}}
     </table>

@@ -57,9 +57,9 @@ function makeHtmlList(mensajes) {
     .map((mensaje) => {
       return `
             <div>
-                <b style="color:rgb(136, 17, 17)">${mensaje.autor}</b>
-                [<span style="color:rgb(223, 122, 122)">${mensaje.fyh}</span>] :
-                <i style="color:rgb(53, 51, 51);">${mensaje.texto}</i>
+                <b style="color:rgb(0, 0, 128)">${mensaje.autor}</b>
+                [<span style="color:rgb(48, 37, 23)">${mensaje.fyh}</span>] :
+                <i style="color:rgb(91, 184, 29);">${mensaje.texto}</i>
             </div>
         `;
     })
