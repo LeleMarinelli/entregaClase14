@@ -1,50 +1,100 @@
-const Products = require("../model/Products");
-
-const products = new Products();
-
 class ContenedorMemoria {
-  constructor() {
-    this.elementos = [];
-    this.id = 0;
+  constructor(config, table) {
+    this.config = config;
+    this.table = table;
   }
 
-  listar(id) {
-    const elem = this.elementos.find((elem) => elem.id == id);
-    return elem || { error: `elemento no encontrado` };
+  listar(idBuscado) {
+    (async () => {
+      try {
+        const data = await this.config
+          .from(this.table)
+          .select("*")
+          .where({ id: idBuscado });
+        console.table(data);
+        return data;
+      } catch (error) {
+        console.log("Elemento no encontrado");
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 
   listarAll() {
-    return [...this.elementos];
+    (async () => {
+      try {
+        const data = await this.config.from(this.table).select("*");
+        return data;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 
   guardar(elem) {
-    const newElem = { ...elem, id: ++this.id };
-    this.elementos.push(newElem);
-    return newElem;
+    (async () => {
+      try {
+        const newProductAdded = elem;
+        await this.config(this.table).insert(newProductAdded);
+        console.log("Se agrego un producto!");
+        return newProductAdded;
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 
-  actualizar(elem, id) {
-    const newElem = { id: Number(id), ...elem };
-    const index = this.elementos.findIndex((p) => p.id == id);
-    if (index !== -1) {
-      this.elementos[index] = newElem;
-      return newElem;
-    } else {
-      return { error: `elemento no encontrado` };
-    }
+  actualizar(elem, idElemento) {
+    (async () => {
+      try {
+        await this.config
+          .from(this.table)
+          .where({ id: idElemento })
+          .update(elem);
+        console.table("Se ha actualizado un elemento");
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 
-  borrar(id) {
-    const index = this.elementos.findIndex((elem) => elem.id == id);
-    if (index !== -1) {
-      return this.elementos.splice(index, 1);
-    } else {
-      return { error: `elemento no encontrado` };
-    }
+  borrar(idBorrar) {
+    (async () => {
+      try {
+        await this.config.from(this.table).where({ id: idBorrar }).del();
+        console.table("Entry deleted!");
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 
   borrarAll() {
-    this.elementos = [];
+    (async () => {
+      try {
+        await this.config.from(this.table).del();
+        console.table("Se ha borrado todo!");
+      } catch (error) {
+        console.log(error);
+        throw error;
+      } finally {
+        this.config.destroy();
+      }
+    })();
   }
 }
 
