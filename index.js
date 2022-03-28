@@ -30,12 +30,16 @@ io.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado!");
 
   //Productos///////////////////
+  let productos = await productosApi.listarAll();
+  console.table(productos);
+  socket.emit("productos", productos);
 
-  socket.emit("productos", productosApi.listarAll());
+  socket.on("update", async (producto) => {
+    productos = await productosApi.listarAll();
+    console.table(productos);
 
-  socket.on("update", (producto) => {
     productosApi.guardar(producto);
-    io.sockets.emit("productos", productosApi.listarAll());
+    io.sockets.emit("productos", productos);
   });
 
   // // Mensajes///////////////////

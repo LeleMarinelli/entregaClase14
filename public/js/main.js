@@ -1,4 +1,4 @@
-const socket = io.connect();
+let socket = io("http://localhost:8080/");
 
 //PRODUCTOS...
 
