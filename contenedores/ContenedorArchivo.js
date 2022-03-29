@@ -1,81 +1,77 @@
-const { promises: fs } = require("fs");
+// CONTENEDOR // MENSAJES.
 
 class ContenedorArchivo {
-  constructor(ruta) {
-    this.ruta = ruta;
-  }
-
-  async listar(id) {
-    const objs = await this.listarAll();
-    const buscado = objs.find((o) => o.id == id);
-    return buscado;
+  // constructor(ruta) {
+  //   this.ruta = ruta;
+  // }
+  constructor(config, table) {
+    this.config = config;
+    this.table = table;
   }
 
   async listarAll() {
     try {
-      const objs = await fs.readFile(this.ruta, "utf-8");
-      return JSON.parse(objs);
+      const data = await this.config.from(this.table).select("*");
+      return data;
     } catch (error) {
-      return [];
+      console.log(error);
+      throw error;
     }
   }
 
-  async guardar(obj) {
-    const objs = await this.listarAll();
-
-    let newId;
-    if (objs.length == 0) {
-      newId = 1;
-    } else {
-      newId = objs[objs.length - 1].id + 1;
-    }
-
-    const newObj = { ...obj, id: newId };
-    objs.push(newObj);
-
+  async listar(idBuscado) {
     try {
-      await fs.writeFile(this.ruta, JSON.stringify(objs, null, 2));
-      return newId;
+      const data = await this.config
+        .from(this.table)
+        .select("*")
+        .where({ id: idBuscado });
+      console.table(data);
+      return data;
     } catch (error) {
-      throw new Error(`Error al guardar: ${error}`);
+      console.log("Elemento no encontrado");
+      throw error;
     }
   }
 
-  async actualizar(elem, id) {
-    const objs = await this.listarAll();
-    const index = objs.findIndex((o) => o.id == id);
-    if (index == -1) {
-      throw new Error(`Error al actualizar: no se encontró el id ${id}`);
-    } else {
-      objs[index] = elem;
-      try {
-        await fs.writeFile(this.ruta, JSON.stringify(objs, null, 2));
-      } catch (error) {
-        throw new Error(`Error al borrar: ${error}`);
-      }
-    }
-  }
-
-  async borrar(id) {
-    const objs = await this.listarAll();
-    const index = objs.findIndex((o) => o.id == id);
-    if (index == -1) {
-      throw new Error(`Error al borrar: no se encontró el id ${id}`);
-    }
-
-    objs.splice(index, 1);
+  async guardar(elem) {
     try {
-      await fs.writeFile(this.ruta, JSON.stringify(objs, null, 2));
+      const newProductAdded = elem;
+      await this.config(this.table).insert(newProductAdded);
+      console.log("Se agrego un producto!");
+      return newProductAdded;
     } catch (error) {
-      throw new Error(`Error al borrar: ${error}`);
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async actualizar(elem, idElemento) {
+    try {
+      await this.config.from(this.table).where({ id: idElemento }).update(elem);
+      console.table("Se ha actualizado un elemento");
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async borrar(idBorrar) {
+    try {
+      await this.config.from(this.table).where({ id: idBorrar }).del();
+      console.table("Entry deleted!");
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   }
 
   async borrarAll() {
     try {
-      await fs.writeFile(this.ruta, JSON.stringify([], null, 2));
+      await this.config.from(this.table).del();
+      console.table("Se ha borrado todo!");
     } catch (error) {
-      throw new Error(`Error al borrar todo: ${error}`);
+      console.log(error);
+      throw error;
     }
   }
 }

@@ -1,7 +1,19 @@
+// CONTENEDOR // PRODUCTOS.
+
 class ContenedorMemoria {
   constructor(config, table) {
     this.config = config;
     this.table = table;
+  }
+
+  async listarAll() {
+    try {
+      const data = await this.config.from(this.table).select("*");
+      return data;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
   async listar(idBuscado) {
@@ -14,16 +26,6 @@ class ContenedorMemoria {
       return data;
     } catch (error) {
       console.log("Elemento no encontrado");
-      throw error;
-    }
-  }
-
-  async listarAll() {
-    try {
-      const data = await this.config.from(this.table).select("*");
-      return data;
-    } catch (error) {
-      console.log(error);
       throw error;
     }
   }

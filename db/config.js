@@ -11,4 +11,10 @@ module.exports = {
       database: "entrega16memoria",
     },
   },
+  sqlite: {
+    client: "sqlite3",
+    connection: {
+      filename: path.resolve(__dirname, "./ecommerce.sqlite"),
+    },
+  },
 };

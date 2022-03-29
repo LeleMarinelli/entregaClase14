@@ -1,3 +1,5 @@
+// TABLA // PRODUCTOS.
+
 const dbconfig = require("../db/config");
 const knex = require("knex")(dbconfig.mariaDB);
 
