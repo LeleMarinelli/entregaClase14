@@ -22,19 +22,17 @@ const ContenedorArchivo = require("./contenedores/ContenedorArchivo.js");
 
 const productosApi = new ContenedorMemoria(knex, "memoria");
 const mensajesApi = new ContenedorArchivo(knexSq, "archivo");
-// const mensajesApi = new ContenedorArchivo( "mensajes.json");
 
-// middlewares
+// MIDDLEWARES
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Socket io
+// SOCKET IO
 io.on("connection", async (socket) => {
   console.log("Nuevo cliente conectado!");
 
-  // Productos ///////////////////
-
+  //   Productos   //
   let productos = await productosApi.listarAll();
   console.table(productos);
   socket.emit("productos", productos);
@@ -47,8 +45,7 @@ io.on("connection", async (socket) => {
     io.sockets.emit("productos", productos);
   });
 
-  // Mensajes///////////////////
-
+  //   Mensajes   //
   socket.emit("mensajes", await mensajesApi.listarAll());
 
   socket.on("nuevoMensaje", async (mensaje) => {
@@ -59,6 +56,7 @@ io.on("connection", async (socket) => {
   });
 });
 
+// CONEXIÓN
 const PORT = 8080;
 const connectedServer = httpServer.listen(PORT, () => {
   console.log(`Server is up and running on port ${PORT}`);

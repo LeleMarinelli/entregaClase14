@@ -1,9 +1,6 @@
 // CONTENEDOR // MENSAJES.
 
 class ContenedorArchivo {
-  // constructor(ruta) {
-  //   this.ruta = ruta;
-  // }
   constructor(config, table) {
     this.config = config;
     this.table = table;
