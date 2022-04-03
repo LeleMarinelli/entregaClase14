@@ -1,5 +1,9 @@
 const express = require("express");
 
+const {
+  ENV: { PORT },
+} = require("./db/config");
+
 const { Server: HttpServer } = require("http");
 const { Server: Socket } = require("socket.io");
 
@@ -9,16 +13,19 @@ const io = new Socket(httpServer);
 
 // DATABASE CONFIG
 const dbconfig = require("./db/config");
-const knex = require("knex")(dbconfig.mariaDB);
-const knexSq = require("knex")(dbconfig.sqlite);
+const knex = require("knex")(dbconfig.DB_CONFIG.mariaDB);
+const knexSq = require("knex")(dbconfig.DB_CONFIG.sqlite);
+
+// API ROUTES
+const apiRoutes = require("./routers/index");
 
 // CREAR TABLAS
 const createTableMemoria = require("./tables/tableMemoria");
 const createTableArchivo = require("./tables/tableArchivo");
 
 // CONTENEDORES
-const ContenedorMemoria = require("./contenedores/ContenedorMemoria.js");
-const ContenedorArchivo = require("./contenedores/ContenedorArchivo.js");
+const ContenedorMemoria = require("./models/contenedores/ContenedorMemoria.js");
+const ContenedorArchivo = require("./models/contenedores/ContenedorArchivo.js");
 
 const productosApi = new ContenedorMemoria(knex, "memoria");
 const mensajesApi = new ContenedorArchivo(knexSq, "archivo");
@@ -56,8 +63,11 @@ io.on("connection", async (socket) => {
   });
 });
 
+// ROUTES
+app.use("/api", apiRoutes);
+
 // CONEXIÓN
-const PORT = 8080;
+
 const connectedServer = httpServer.listen(PORT, () => {
   console.log(`Server is up and running on port ${PORT}`);
 });
