@@ -1,7 +1,7 @@
 // TABLA // MENSAJES.
 
 const dbconfig = require("../db/config");
-const knex = require("knex")(dbconfig.sqlite);
+const knex = require("knex")(dbconfig.DB_CONFIG.sqlite);
 
 module.export = (async () => {
   try {

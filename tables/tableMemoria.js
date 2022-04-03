@@ -1,7 +1,7 @@
 // TABLA // PRODUCTOS.
 
 const dbconfig = require("../db/config");
-const knex = require("knex")(dbconfig.mariaDB);
+const knex = require("knex")(dbconfig.DB_CONFIG.mariaDB);
 
 module.export = (async () => {
   try {
