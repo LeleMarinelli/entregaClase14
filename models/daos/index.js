@@ -1,5 +1,6 @@
 const {
   ENV: { PERS },
+  DB_CONFIG,
 } = require("../../db/config");
 
 let ProductsDao;
@@ -15,6 +16,9 @@ switch (PERS) {
     CartsDao = require("./carts/MongoCartsDao");
     break;
   case "mariadb":
+    const knex = require("knex")(DB_CONFIG.mariadb);
+    const ContenedorMemoria = require("../contenedores/ContenedorMemoria");
+    ProductsDao = new ContenedorMemoria(knex, "memoria");
     break;
   case "sqlite":
     break;
