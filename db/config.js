@@ -1,6 +1,8 @@
 const firebaseConfig = require("./firebase/ecommerce-backend-leandro-firebase-adminsdk-b4fuo-6577f192d3.json");
 const path = require("path");
 
+require("dotenv").config({ path: ".env" });
+
 module.exports = {
   ENV: {
     PORT: process.env.PORT || 8080,
